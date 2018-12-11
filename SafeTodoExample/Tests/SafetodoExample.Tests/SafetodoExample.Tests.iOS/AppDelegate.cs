@@ -25,7 +25,7 @@ namespace SafetodoExample.Tests.iOS
                     {
                         return UnitTests.HeadlessRunner.Tests.RunAsync(new TestOptions
                         {
-                            Assemblies = new List<Assembly> { Assembly.GetExecutingAssembly() },
+                            Assemblies = new List<Assembly> { typeof(Tests).Assembly },
                             NetworkLogHost = ip,
                             NetworkLogPort = port,
                             Format = TestResultsFormat.NUnit

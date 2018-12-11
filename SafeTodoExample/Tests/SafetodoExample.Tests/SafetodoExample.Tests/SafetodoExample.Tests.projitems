@@ -9,8 +9,6 @@
     <Import_RootNamespace>SafetodoExample.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)TestCaseOrderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TestPriorityAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests.cs" />
   </ItemGroup>
 </Project>

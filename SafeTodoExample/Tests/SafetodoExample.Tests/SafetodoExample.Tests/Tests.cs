@@ -8,16 +8,9 @@ using Xunit;
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace SafetodoExample.Tests
 {
-#if __IOS__
-    [TestCaseOrderer("SafetodoExample.Tests.TestCaseOrderer", "SafetodoExampleTestsiOS")]
-#elif __ANDROID__
-    [TestCaseOrderer("SafetodoExample.Tests.TestCaseOrderer", "SafetodoExample.Tests.Android")]
-#endif
-
     public class Tests
     {
         [Fact]
-        [TestPriority(1)]
         public void IsMockAppTest()
         {
             try
@@ -31,7 +24,6 @@ namespace SafetodoExample.Tests
         }
 
         [Fact]
-        [TestPriority(2)]
         public async Task MockAuthenticationTest()
         {
             try
@@ -47,6 +39,7 @@ namespace SafetodoExample.Tests
 
                 await authViewModel.ConnectToMockAsync();
                 Assert.True(messageReceived);
+                authViewModel.AppService.Dispose();
             }
             catch (Exception ex)
             {
@@ -55,20 +48,32 @@ namespace SafetodoExample.Tests
         }
 
         [Fact]
-        [TestPriority(3)]
         public async Task MutableOperationsTest()
         {
             try
             {
                 bool messageReceived = false;
+                var authViewModel = new MainPageViewModel();
+
+                MessagingCenter.Subscribe<MainPageViewModel>(
+                    this, MessengerConstants.NavigateToItemPage, sender =>
+                    {
+                        messageReceived = true;
+                    });
+
+                await authViewModel.ConnectToMockAsync();
+                Assert.True(messageReceived);
+
                 var todoItemsViewModel = new TodoItemsPageViewModel();
-                var addItemViewModel = new AddItemViewModel();
 
                 // Test get mdata entries
                 await todoItemsViewModel.OnRefreshItemsCommand();
                 Assert.Empty(todoItemsViewModel.ToDoItems);
 
+                var addItemViewModel = new AddItemViewModel();
+
                 // Test add todo item
+                messageReceived = false;
                 MessagingCenter.Subscribe<AddItemViewModel>(
                     this, MessengerConstants.RefreshItemList, sender =>
                     {
@@ -108,6 +113,8 @@ namespace SafetodoExample.Tests
                 await todoItemsViewModel.OnRefreshItemsCommand();
                 Assert.Single(todoItemsViewModel.ToDoItems);
                 Assert.Equal(newDetails, todoItemsViewModel.ToDoItems[0].Detail);
+
+                authViewModel.AppService.Dispose();
             }
             catch (Exception ex)
             {
