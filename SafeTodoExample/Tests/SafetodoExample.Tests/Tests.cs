@@ -1,29 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
+using NUnit.Framework;
 using SafeTodoExample.Helpers;
 using SafeTodoExample.ViewModel;
 using Xamarin.Forms;
-using Xunit;
 
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace SafetodoExample.Tests
 {
+    [TestFixture]
     public class Tests
     {
-        [Fact]
-        public void IsMockAppTest()
-        {
-            try
-            {
-                Assert.True(SafeApp.AppBindings.AppResolver.Current.IsMockBuild());
-            }
-            catch (Exception ex)
-            {
-                Assert.True(false, ex.Message);
-            }
-        }
-
-        [Fact]
+        [Test]
         public async Task MockAuthenticationTest()
         {
             try
@@ -47,7 +34,7 @@ namespace SafetodoExample.Tests
             }
         }
 
-        [Fact]
+        [Test]
         public async Task MutableOperationsTest()
         {
             try
@@ -68,7 +55,7 @@ namespace SafetodoExample.Tests
 
                 // Test get mdata entries
                 await todoItemsViewModel.OnRefreshItemsCommand();
-                Assert.Empty(todoItemsViewModel.ToDoItems);
+                Assert.Zero(todoItemsViewModel.ToDoItems.Count);
 
                 var addItemViewModel = new AddItemViewModel();
 
@@ -86,7 +73,7 @@ namespace SafetodoExample.Tests
 
                 // Test fetch todo items
                 await todoItemsViewModel.OnRefreshItemsCommand();
-                Assert.NotEmpty(todoItemsViewModel.ToDoItems);
+                Assert.NotZero(todoItemsViewModel.ToDoItems.Count);
 
                 // Test add second todo item
                 messageReceived = false;
@@ -97,13 +84,13 @@ namespace SafetodoExample.Tests
 
                 // Test fetch todo items
                 await todoItemsViewModel.OnRefreshItemsCommand();
-                Assert.NotEmpty(todoItemsViewModel.ToDoItems);
-                Assert.Equal(2, todoItemsViewModel.ToDoItems.Count);
+                Assert.NotZero(todoItemsViewModel.ToDoItems.Count);
+                Assert.AreEqual(2, todoItemsViewModel.ToDoItems.Count);
 
                 // Test delete todo item
                 await todoItemsViewModel.DeleteItemAsync(todoItemsViewModel.ToDoItems[0]);
                 await todoItemsViewModel.OnRefreshItemsCommand();
-                Assert.Single(todoItemsViewModel.ToDoItems);
+                Assert.AreEqual(1, todoItemsViewModel.ToDoItems.Count);
 
                 // Test update todo item
                 var updateViewModel = new AddItemViewModel(todoItemsViewModel.ToDoItems[0], true);
@@ -111,8 +98,8 @@ namespace SafetodoExample.Tests
                 updateViewModel.Details = newDetails;
                 await updateViewModel.OnAddItemCommand();
                 await todoItemsViewModel.OnRefreshItemsCommand();
-                Assert.Single(todoItemsViewModel.ToDoItems);
-                Assert.Equal(newDetails, todoItemsViewModel.ToDoItems[0].Detail);
+                Assert.AreEqual(1, todoItemsViewModel.ToDoItems.Count);
+                Assert.AreEqual(newDetails, todoItemsViewModel.ToDoItems[0].Detail);
 
                 authViewModel.AppService.Dispose();
             }
