@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace SafetodoExample.Tests.Android
 {
-    [Activity(Label = "NUnit", Icon = "@drawable/icon", Theme = "@android:style/Theme.Holo.Light", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Name = "net.maidsafe.SafetodoExampleTests.MainActivity", Label = "NUnit", Icon = "@drawable/icon", Theme = "@android:style/Theme.Holo.Light", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -37,7 +37,7 @@ namespace SafetodoExample.Tests.Android
 
                     // Information about the tcp listener host and port.
                     // For now, send result as XML to the listening server.
-                    //TcpWriterParameters = new TcpWriterInfo("192.168.0.108", 13000),
+                    TcpWriterParameters = new TcpWriterInfo("10.0.2.2", 10500),
 
                     // Creates a NUnit Xml result file on the host file system using PCLStorage library.
                     // CreateXmlResultFile = true,

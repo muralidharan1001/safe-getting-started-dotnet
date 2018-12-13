@@ -25,7 +25,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>NUnit</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.nunit.tests</string>
+	<string>net.maidsafe.SafetodoExampleTests</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleIconFiles</key>
