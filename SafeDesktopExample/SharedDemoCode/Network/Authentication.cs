@@ -12,7 +12,9 @@ namespace App.Network
     public class Authentication
     {
 #if SAFE_APP_MOCK
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public static async Task<Session> MockAuthenticationAsync()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
@@ -21,23 +23,11 @@ namespace App.Network
                 // This way we don't have to authenticate using safe-browser.
 
                 // Generating random credentials
-                var location = Helpers.GenerateRandomString(10);
-                var password = Helpers.GenerateRandomString(10);
-                var invitation = Helpers.GenerateRandomString(15);
-                var authenticator = await Authenticator.CreateAccountAsync(location, password, invitation);
-                authenticator = await Authenticator.LoginAsync(location, password);
+                // Insert "Create a mock account" here
 
-                // Authentication and Logging
-                var (_, reqMsg) = await Helpers.GenerateEncodedAppRequestAsync();
-                var ipcReq = await authenticator.DecodeIpcMessageAsync(reqMsg);
-                var authIpcReq = ipcReq as AuthIpcReq;
-                var resMsg = await authenticator.EncodeAuthRespAsync(authIpcReq, true);
-                var ipcResponse = await Session.DecodeIpcMessageAsync(resMsg);
-                var authResponse = ipcResponse as AuthIpcMsg;
+                // Insert "Authentication and Logging" here
 
-                // Initialize a new session
-                var session = await Session.AppRegisteredAsync(ConsoleAppConstants.AppId, authResponse.AuthGranted);
-                return session;
+                return null;
             }
             catch (Exception ex)
             {
@@ -46,16 +36,17 @@ namespace App.Network
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public static async Task MockAuthenticationWithBrowserAsync()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
                 // Send request to mock safe-browser for authentication.
                 // Use a mock account credentials in safe-browser and authenticate using the same.
                 Console.WriteLine("Requesting authentication from mock Safe browser");
-                var encodedReq = await Helpers.GenerateEncodedAppRequestAsync();
-                var url = Helpers.UrlFormat(encodedReq.Item2, true);
-                System.Diagnostics.Process.Start(url);
+
+                // Insert "Send AuthReq to the Authenticator" here
             }
             catch (Exception ex)
             {
@@ -83,30 +74,13 @@ namespace App.Network
         }
 #endif
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public static async Task ProcessAuthenticationResponse(string authResponse)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
-                var encodedRequest = Helpers.GetRequestData(authResponse);
-                var decodeResult = await Session.DecodeIpcMessageAsync(encodedRequest);
-                if (decodeResult.GetType() == typeof(AuthIpcMsg))
-                {
-                    var ipcMsg = decodeResult as AuthIpcMsg;
-                    Console.WriteLine("Auth Reqest Granted from Authenticator");
-
-                    // Create session object
-                    if (ipcMsg != null)
-                    {
-                        // Initialise a new session
-                        var session = await Session.AppRegisteredAsync(ConsoleAppConstants.AppId, ipcMsg.AuthGranted);
-                        MutableDataOperations.InitialiseSession(session);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Auth Request is not Granted");
-                    throw new Exception("Auth Request not granted.");
-                }
+                // Insert "Grant access" here
             }
             catch (Exception ex)
             {

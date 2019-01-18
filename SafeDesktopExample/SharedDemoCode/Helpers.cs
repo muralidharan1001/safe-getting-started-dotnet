@@ -24,17 +24,14 @@ namespace App
         }
 
         // Generating encoded app request using appname, appid, vendor
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public static async Task<(uint, string)> GenerateEncodedAppRequestAsync()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             Console.WriteLine("\nGenerating application authentication request");
-            var authReq = new AuthReq
-            {
-                AppContainer = true,
-                App = new AppExchangeInfo { Id = ConsoleAppConstants.AppId, Scope = string.Empty, Name = ConsoleAppConstants.AppName, Vendor = ConsoleAppConstants.Vendor },
-                Containers = new List<ContainerPermissions> { new ContainerPermissions { ContName = "_publicNames", Access = { Insert = true } } }
-            };
 
-            return await Session.EncodeAuthReqAsync(authReq);
+            // Insert "Generate an AuthReq" here
+            return (0, null);
         }
 
         // Registering URL Protocol in System Registery using full path of the application

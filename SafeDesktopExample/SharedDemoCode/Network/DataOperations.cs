@@ -25,23 +25,17 @@ namespace App.Network
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         internal async Task CreateMutableData()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
                 Console.WriteLine("\nCreating new mutable data");
-                const ulong tagType = 15010;
-                _mdinfo = await _session.MDataInfoActions.RandomPrivateAsync(tagType);
 
-                var mDataPermissionSet = new PermissionSet { Insert = true, ManagePermissions = true, Read = true, Update = true, Delete = true };
-                using (var permissionsH = await _session.MDataPermissions.NewAsync())
-                {
-                    using (var appSignKeyH = await _session.Crypto.AppPubSignKeyAsync())
-                    {
-                        await _session.MDataPermissions.InsertAsync(permissionsH, appSignKeyH, mDataPermissionSet);
-                        await _session.MData.PutAsync(_mdinfo, permissionsH, NativeHandle.EmptyMDataEntries);
-                    }
-                }
+                // Insert "Create MDataInfo" here
+
+                // Insert "Permission Sets" here
                 Console.WriteLine("Mutable data created succesfully");
             }
             catch (Exception ex)
@@ -52,17 +46,13 @@ namespace App.Network
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         internal async Task AddEntry(string key, string value)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
-                using (var entryActionsH = await _session.MDataEntryActions.NewAsync())
-                {
-                    var encryptedKey = await _session.MDataInfoActions.EncryptEntryKeyAsync(_mdinfo, key.ToUtfBytes());
-                    var encryptedValue = await _session.MDataInfoActions.EncryptEntryValueAsync(_mdinfo, value.ToUtfBytes());
-                    await _session.MDataEntryActions.InsertAsync(entryActionsH, encryptedKey, encryptedValue);
-                    await _session.MData.MutateEntriesAsync(_mdinfo, entryActionsH);
-                }
+                // Insert "Add entries to mutable data" here
                 Console.WriteLine("Entry Added");
             }
             catch (Exception ex)
@@ -71,48 +61,30 @@ namespace App.Network
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         internal async Task<List<MDataEntry>> GetEntries()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            List<MDataEntry> entries = new List<MDataEntry>();
+            // Insert "MDataEntry list" here
             try
             {
-                using (var entriesHandle = await _session.MDataEntries.GetHandleAsync(_mdinfo))
-                {
-                    var encryptedEntries = await _session.MData.ListEntriesAsync(entriesHandle);
-                    foreach (var entry in encryptedEntries)
-                    {
-                        if (entry.Value.Content.Count != 0)
-                        {
-                            var decryptedKey = await _session.MDataInfoActions.DecryptAsync(_mdinfo, entry.Key.Key.ToList());
-                            var decryptedValue = await _session.MDataInfoActions.DecryptAsync(_mdinfo, entry.Value.Content.ToList());
-                            entries.Add(new MDataEntry()
-                            {
-                                Key = new MDataKey() { Key = decryptedKey },
-                                Value = new MDataValue { Content = decryptedValue, EntryVersion = entry.Value.EntryVersion }
-                            });
-                        }
-                    }
-                }
+                // Insert "Read mutable data entries" here
+                return null;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
+                throw ex;
             }
-            return entries;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         internal async Task UpdateEntry(string key, string newValue)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
-                var keyToUpdate = await _session.MDataInfoActions.EncryptEntryKeyAsync(_mdinfo, key.ToUtfBytes());
-                var newValueToUpdate = await _session.MDataInfoActions.EncryptEntryValueAsync(_mdinfo, newValue.ToUtfBytes());
-                using (var entriesHandle = await _session.MDataEntryActions.NewAsync())
-                {
-                    var value = await _session.MData.GetValueAsync(_mdinfo, keyToUpdate);
-                    await _session.MDataEntryActions.UpdateAsync(entriesHandle, keyToUpdate, newValueToUpdate, value.Item2 + 1);
-                    await _session.MData.MutateEntriesAsync(_mdinfo, entriesHandle);
-                }
+                // Insert "Update an entry" here
             }
             catch (Exception ex)
             {
@@ -120,17 +92,13 @@ namespace App.Network
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         internal async Task DeleteEntry(string key)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             try
             {
-                var keyToDelete = await _session.MDataInfoActions.EncryptEntryKeyAsync(_mdinfo, key.ToUtfBytes());
-                using (var entriesHandle = await _session.MDataEntryActions.NewAsync())
-                {
-                    var value = await _session.MData.GetValueAsync(_mdinfo, keyToDelete);
-                    await _session.MDataEntryActions.DeleteAsync(entriesHandle, keyToDelete, value.Item2 + 1);
-                    await _session.MData.MutateEntriesAsync(_mdinfo, entriesHandle);
-                }
+                // Insert "Remove an entry" here
             }
             catch (Exception ex)
             {
